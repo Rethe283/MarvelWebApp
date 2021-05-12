@@ -1,0 +1,28 @@
+﻿@model List<Hero>
+
+@{
+    ViewData["Title"] = "Heroes List";
+    var numberOfRows = Math.Ceiling(Model.Count() / 3d);
+}
+
+<h1>Heroes List</h1>
+<div class="container">
+    @for (int i = 0; i < numberOfRows; i++)
+    {
+        var heroes = Model.Skip(i * 3).Take(3);
+        <div class="row mb-2">
+            @foreach (var hero in heroes)
+            {
+                <div class="col-sm-4">
+                    <div class="card" style="width: 18rem;">
+                        <img src="@hero.ThumbnailUrl" class="card-img-top" alt="@hero.Name">
+                        <div class="card-body">
+                            <h5 class="card-title">@hero.Name</h5>
+                            <p class="card-text">@hero.Description</p>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+</div>

@@ -1,4 +1,5 @@
 using MarvelWebApp.Data;
+using MarvelWebApp.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
@@ -26,6 +27,7 @@ namespace MarvelWebApp
             services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
                     .AddEntityFrameworkStores<ApplicationDbContext>();
             services.AddControllersWithViews();
+            services.AddTransient<IHeroService, InMemoryHeroService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
