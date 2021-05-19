@@ -1,3 +1,4 @@
+using MarvelWebApp.Configuration;
 using MarvelWebApp.Data;
 using MarvelWebApp.Services;
 using Microsoft.AspNetCore.Builder;
@@ -7,6 +8,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Options;
+using System;
 
 namespace MarvelWebApp
 {
@@ -27,7 +30,24 @@ namespace MarvelWebApp
             services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
                     .AddEntityFrameworkStores<ApplicationDbContext>();
             services.AddControllersWithViews();
-            services.AddTransient<IHeroService, InMemoryHeroService>();
+            // Configure options.
+            services.Configure<MarvelApiSettings>(Configuration.GetSection(nameof(MarvelApiSettings)));
+            // Configure services.
+            var useInMemoryData = Configuration.GetValue<bool>("UseInMemoryData");
+            if (useInMemoryData)
+            {
+                services.AddTransient<IHeroService, InMemoryHeroService>();
+            }
+            else
+            {
+                services.AddHttpClient<IHeroService, MarvelHeroService>()
+                        .SetHandlerLifetime(TimeSpan.FromHours(1))
+                        .ConfigureHttpClient((serviceProvider, httpClient) =>
+                        {
+                            var apiSettings = serviceProvider.GetService<IOptions<MarvelApiSettings>>();
+                            httpClient.BaseAddress = new Uri(apiSettings.Value.BaseAddress);
+                        });
+            }
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
