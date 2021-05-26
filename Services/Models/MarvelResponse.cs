@@ -1,5 +1,6 @@
-﻿using System;
+﻿using MarvelWebApp.Models;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace MarvelWebApp.Services.Models
 {
@@ -28,7 +29,7 @@ namespace MarvelWebApp.Services.Models
         public int Id { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
-        public DateTime Modified { get; set; }
+        //public DateTime Modified { get; set; }
         public MarvelThumbnail Thumbnail { get; set; }
     }
 
@@ -36,5 +37,19 @@ namespace MarvelWebApp.Services.Models
     {
         public string Path { get; set; }
         public string Extension { get; set; }
+    }
+
+    public static class MarvelResponseExtensions
+    {
+        public static IEnumerable<Hero> ToHeroEnumerable(this MarvelResponse model)
+        {
+            var result = model.Data.Results.Select(x => new Hero
+            {
+                Name = x.Name,
+                Description = x.Description,
+                ThumbnailUrl = x.Thumbnail != null ? $"{x.Thumbnail.Path}.{x.Thumbnail.Extension}" : null
+            });
+            return result;
+        }
     }
 }
