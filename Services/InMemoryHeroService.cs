@@ -34,7 +34,7 @@ namespace MarvelWebApp.Services
             }
         };
 
-        public Task<IEnumerable<Hero>> GetHeroes()
+        public Task<IEnumerable<Hero>> GetHeroes(string page)
         {
             return Task.FromResult(_heroes);
         }

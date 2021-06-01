@@ -26,3 +26,45 @@
         </div>
     }
 </div>
+@{
+    var item = Model.ElementAt(0);
+    var page = Int32.Parse(item.Page);
+    var k = (page - 1).ToString();
+    var l = page.ToString();
+    var m = (page + 1).ToString();
+}
+@{      
+    if (page == 1)
+    {
+        <nav aria-label="Page navigation example">
+            <ul class="pagination justify-content-center">
+                <li class="page-item disabled">
+                    <a class="page-link" href="@k" tabindex="-1">Previous</a>
+                </li>
+                <li class="page-item"><a class="page-link" href="list?page=@l">@l</a></li>
+                <li class="page-item"><a class="page-link" href="list?page=@m">@m</a></li>
+                <li class="page-item">
+                    <a class="page-link" href="list?page=@m">Next</a>
+                </li>
+            </ul>
+        </nav>
+    }
+    else
+    { 
+        <nav aria-label="Page navigation example">
+            <ul class="pagination justify-content-center">
+                <li class="page-item">
+                    <a class="page-link" href="list?page=@k">Previous</a>
+                </li>
+                <li class="page-item"><a class="page-link" href="list?page=@k">@k</a></li>
+                <li class="page-item"><a class="page-link" href="list?page=@l">@l</a></li>
+                <li class="page-item"><a class="page-link" href="list?page=@m">@m</a></li>
+                <li class="page-item">
+                    <a class="page-link" href="list?page=@m">Next</a>
+                </li>
+            </ul>
+        </nav>
+
+    }
+
+}

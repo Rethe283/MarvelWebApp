@@ -1,6 +1,7 @@
 ﻿using MarvelWebApp.Services;
 using Microsoft.AspNetCore.Mvc;
 using System;
+using System.Net;
 using System.Threading.Tasks;
 
 namespace MarvelWebApp.Controllers
@@ -14,12 +15,21 @@ namespace MarvelWebApp.Controllers
         }
 
         public IHeroService HeroService { get; }
-
+        
         [HttpGet("list")]
         public async Task<IActionResult> GetHeroes()
         {
-            var heroes = await HeroService.GetHeroes();
-            return View(heroes);
+            if (Request.Query["page"] != default(string) )
+            {
+                string page = Request.Query["page"];
+                var heroes = await HeroService.GetHeroes(page);
+                return View(heroes);
+            }
+            else
+            {
+                var heroes = await HeroService.GetHeroes("1");
+                return View(heroes);
+            }
         }
     }
 }

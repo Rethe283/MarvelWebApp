@@ -6,6 +6,6 @@ namespace MarvelWebApp.Services
 {
     public interface IHeroService
     {
-        Task<IEnumerable<Hero>> GetHeroes();
+        Task<IEnumerable<Hero>> GetHeroes(string page);
     }
 }

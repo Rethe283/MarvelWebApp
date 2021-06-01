@@ -41,13 +41,14 @@ namespace MarvelWebApp.Services.Models
 
     public static class MarvelResponseExtensions
     {
-        public static IEnumerable<Hero> ToHeroEnumerable(this MarvelResponse model)
+        public static IEnumerable<Hero> ToHeroEnumerable(this MarvelResponse model, string page)
         {
             var result = model.Data.Results.Select(x => new Hero
             {
                 Name = x.Name,
                 Description = x.Description,
-                ThumbnailUrl = x.Thumbnail != null ? $"{x.Thumbnail.Path}.{x.Thumbnail.Extension}" : null
+                ThumbnailUrl = x.Thumbnail != null ? $"{x.Thumbnail.Path}.{x.Thumbnail.Extension}" : null,
+                Page = page
             });
             return result;
         }
