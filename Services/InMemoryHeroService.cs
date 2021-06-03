@@ -1,5 +1,6 @@
 ﻿using MarvelWebApp.Models;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace MarvelWebApp.Services
@@ -34,9 +35,7 @@ namespace MarvelWebApp.Services
             }
         };
 
-        public Task<IEnumerable<Hero>> GetHeroes(string page)
-        {
-            return Task.FromResult(_heroes);
-        }
+        public Task<IEnumerable<Hero>> GetHeroes(ListOptions options) =>
+            Task.FromResult(_heroes.Skip((options.Page - 1) * options.Size).Take(options.Size));
     }
 }

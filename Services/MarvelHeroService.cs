@@ -29,21 +29,21 @@ namespace MarvelWebApp.Services
         public HttpClient HttpClient { get; }
         public MarvelApiSettings ApiSettings { get; }
 
-        public async Task<IEnumerable<Hero>> GetHeroes(string page)
+        public async Task<IEnumerable<Hero>> GetHeroes(ListOptions options)
         {
-            int offset = (Int32.Parse(page)-1)*9;
+            var offset = (options.Page - 1) * options.Size;
             var timestamp = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
             var toHash = timestamp + ApiSettings.PrivateKey + ApiSettings.PublicKey;
             var hash = MD5.Create();
             var hashOutput = string.Join(string.Empty, hash.ComputeHash(Encoding.UTF8.GetBytes(toHash)).Select(b => b.ToString("x2")));
-            var response = await HttpClient.GetAsync($"v1/public/characters?ts={timestamp}&apikey={ApiSettings.PublicKey}&hash={hashOutput}&limit=9&offset={offset}");
+            var response = await HttpClient.GetAsync($"v1/public/characters?ts={timestamp}&apikey={ApiSettings.PublicKey}&hash={hashOutput}&limit={options.Size}&offset={offset}");
             if (!response.IsSuccessStatusCode)
             {
                 return default;
             }
             var responseJson = await response.Content.ReadAsStringAsync();
             var responseModel = JsonSerializer.Deserialize<MarvelResponse>(responseJson, _defaultSerializerOptions);
-            return responseModel.ToHeroEnumerable(page);
+            return responseModel.ToHeroEnumerable(options.Page);
         }
     }
 }
